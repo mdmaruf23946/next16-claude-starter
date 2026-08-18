@@ -18,8 +18,8 @@ humans and AI agents (Claude Code, Cursor).
 
 ### 00 — Meta
 - [[meta/README|Meta overview]] — how to use and maintain this vault
-- [[changelog]] — chronological log of notable project changes
-- [[decisions-log]] — Architecture Decision Records (ADRs)
+- [[changelog]] — log of notable changes to **this** project (starts fresh per project)
+- [[decisions-log]] — Architecture Decision Records: why the conventions are what they are
 
 ### 01 — Architecture
 - [[system-overview]] — the big picture, request lifecycle, mental model
@@ -44,14 +44,22 @@ humans and AI agents (Claude Code, Cursor).
 - [[utils]] — utility functions catalog
 
 ### 03 — Backend
-- [[backend/README|Backend overview]] — API layer; no DB/auth yet
+- [[backend/README|Backend overview]] — API layer, CMS & database
 - [[api-architecture]] — `app/api` route-handler convention & secret handling
+- [[cms-payload]] — Payload CMS, installed per project into this Next app
+- [[database-supabase]] — Supabase Postgres: connections, keys, RLS, migrations
 
 ### 04 — Workflows
+- [[ai-agent-guide]] — rules of engagement for AI agents working in this repo
+- [[agent-harness]] — the `.claude/` execution layer: commands, rules, skills, agents
 - [[new-page]] — playbook for implementing a new page/section
 - [[generic-layout-prompt]] — fill-in prompt template for a new page/section
-- [[optimize-3d-scene]] — the `optimize-3d-scene` skill: performance work on a three.js/WebGL scene
-- [[ai-agent-guide]] — rules of engagement for AI agents working in this repo
+- [[figma-to-code]] — turning a Figma frame into components
+- [[qa-verification]] — how work is checked before it is called done
+- [[ship]] — the pre-launch gate and deployment
+- [[seo-aeo]] — SEO & answer-engine visibility as an ongoing practice
+- [[site-migration]] — protecting rankings when rebuilding a live site
+- [[optimize-3d-scene]] — performance work on a three.js/WebGL scene
 
 ### Templates
 - [[templates/component-note|Component note template]]

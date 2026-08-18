@@ -49,6 +49,20 @@ here on route `/` (see [[ai-agent-guide]] / [[new-page]]).
 | `not-found.tsx` | 404 page — served with a 404 status |
 | `robots.ts` / `sitemap.ts` | Generate `/robots.txt` and `/sitemap.xml` — see [[seo-metadata]] |
 | `api/<resource>/route.ts` | API endpoints (Route Handlers) — see [[api-architecture]] |
+| `src/proxy.ts` | **Replaces `middleware.ts`** — see below. Not present by default. |
+
+## `middleware.ts` is gone — it is `proxy.ts`
+
+Next.js 16 renamed it: the file is `proxy.ts` and the exported function is
+`proxy`. It runs on **Node**; the Edge runtime is not supported and cannot be
+configured. This is exactly the kind of breaking change `AGENTS.md` warns about —
+training data will confidently write `middleware.ts`, and
+`.claude/scripts/verify.sh` FAILs if it finds one.
+
+Keep it thin, per Next's own guidance: routing, rewrites, redirects, and cheap
+cookie checks. Not authorisation — that belongs in the data layer (for Supabase,
+RLS; see [[database-supabase]]). Every matched route runs Node before serving, so
+keep the `matcher` tight or static marketing pages get dragged through it.
 
 ## Adding a route
 
@@ -87,4 +101,4 @@ Each route exports `metadata` via the shared generator — see [[seo-metadata]].
 
 ## Related
 
-[[system-overview]] · [[component-conventions]] · [[new-page]]
+[[system-overview]] · [[component-conventions]] · [[new-page]] · [[qa-verification]]

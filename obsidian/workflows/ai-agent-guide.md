@@ -25,6 +25,7 @@ Rules of engagement for AI agents (Claude Code, Cursor) working in this repo.
 |-------|-------|---------|
 | **This vault** (`obsidian/`) | all of `obsidian/**` | **The single source of truth** — all project documentation, navigable & linked. |
 | **AI entry points** (repo root) | `AGENTS.md`, `CLAUDE.md`, `.cursorrules` | Thin shims — they carry the hard rules and point into the vault. |
+| **Execution layer** | `.claude/**` | Commands, path-scoped rules, skills, agents, hooks and `verify.sh` — see [[agent-harness]]. |
 
 There are no separate spec files anymore — `project-specs.md` was decomposed into
 the vault's `architecture/` and `frontend/` notes, and `text-engine-docs.md`
@@ -53,6 +54,10 @@ consistent with it.
 8. **Performance request + a three.js/WebGL scene in the project → invoke the
    `optimize-3d-scene` skill first.** It owns the order of fixes; don't improvise
    one. See [[optimize-3d-scene]].
+9. **Verify before reporting done.** Run `.claude/scripts/verify.sh` plus
+   `yarn lint` and `yarn build` after any code change, and the `qa-verify` skill
+   after any UI change. Zero FAILs, or say explicitly what you left and why.
+   See [[qa-verification]].
 
 ## Where to look
 
@@ -65,6 +70,14 @@ consistent with it.
 | How do I style something? | [[design-system]] |
 | What components/hooks/utils exist? | [[components/animation-springs]], [[components/common]], [[hooks]], [[utils]] |
 | The 3D scene lags / needs optimising? | [[optimize-3d-scene]] |
+| How do I check my work? | [[qa-verification]] |
+| A Figma design needs building | [[figma-to-code]] |
+| Content needs to be editable | [[cms-payload]] |
+| The project needs a database | [[database-supabase]] |
+| SEO / AI visibility | [[seo-aeo]] |
+| Is it ready to launch? | [[ship]] |
+| Rebuilding an existing live site | [[site-migration]] |
+| What can Claude Code run here? | [[agent-harness]] |
 | Why was X decided? | [[decisions-log]] |
 
 ## After making changes
@@ -73,19 +86,32 @@ consistent with it.
 - Architectural choice → add an ADR to [[decisions-log]].
 - New component/hook/util → document it in the relevant catalog note.
 
-## Skills (`.claude/skills/`)
+## The execution layer (`.claude/`)
 
-Skills are packaged playbooks Claude Code loads on demand. They are **part of the
-workflow set** — each one is registered in this vault, so the routing rule is
-discoverable to any agent (and any human) reading the docs.
+Full map: [[agent-harness]]. Skills, rules, agents and commands are **registered in
+this vault** so the routing is discoverable to any agent or human reading the docs.
 
-| Skill | Invoke when | Vault note |
-|-------|-------------|------------|
-| `optimize-3d-scene` | A performance / jank / pre-ship request **and** the project renders a three.js or WebGL scene | [[optimize-3d-scene]] |
+**Commands** — `/new-page` · `/section` · `/qa` · `/ship` · `/cms` · `/db` ·
+`/seo` · `/migrate-site`
 
-Registering a new skill means: drop it in `.claude/skills/<name>/`, add a vault
-note under `workflows/`, link it from [[README]] and from the table above, and
-log it in [[changelog]].
+**Skills** — `qa-verify`, `figma-to-section`, `payload-cms`, `supabase-db`,
+`supabase-auth`, `seo-audit`, `schema-markup`, `aeo-visibility`, `site-migration`,
+`ship-check`, `optimize-3d-scene`
+
+**Agents** — `section-builder`, `motion-reviewer`, `vault-librarian`, `seo-auditor`
+
+**Rules** (`.claude/rules/`) auto-load when a matching file is read: `motion.md`,
+`design-tokens.md`, `routing-views.md`, `api-env.md`, `engine-protected.md`,
+`payload.md`, `supabase.md`.
+
+> [!warning] Rules fire on **read**, not write
+> A path-scoped rule enters context when Claude reads a matching file — not when
+> it creates one, and not again after `/compact` until a match is read. Rules
+> reinforce; they do not guarantee. Anything that must hold regardless belongs in
+> `.claude/scripts/verify.sh` or a hook.
+
+Registering something new means: drop it in `.claude/<kind>/`, add or extend a
+vault note, link it from [[README]] and [[agent-harness]], and log it in [[changelog]].
 
 ## Automated enforcement (hooks)
 

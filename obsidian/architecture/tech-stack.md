@@ -12,8 +12,8 @@ Package name: `next16-claude-starter` · version `0.1.0` · private.
 
 | Package | Version | Role |
 |---------|---------|------|
-| `next` | `16.2.0` | App Router framework. ⚠️ See warning below. |
-| `react` / `react-dom` | `19.2.4` | UI runtime |
+| `next` | `16.3.1` | App Router framework. ⚠️ See warning below. |
+| `react` / `react-dom` | `19.2.8` | UI runtime |
 | `typescript` | `^5` | Type system — `any` is banned |
 
 > [!warning] This is not the Next.js you may know
@@ -35,7 +35,7 @@ See [[design-system]].
 
 | Package | Version | Role |
 |---------|---------|------|
-| `@react-spring/web` | `^10.0.3` | Spring physics — drives **all** motion |
+| `@react-spring/web` | `^10.1.2` | Spring physics — drives **all** motion |
 | `spring-text-engine` | `^0.1.5` | Scroll-aware spring text animation |
 
 No `framer-motion`, no CSS transitions/keyframes. See [[animation-system]] and
@@ -45,8 +45,8 @@ No `framer-motion`, no CSS transitions/keyframes. See [[animation-system]] and
 
 | Package | Version | Role |
 |---------|---------|------|
-| `lenis` | `^1.3.19` | Smooth scrolling |
-| `zustand` | `^5.0.12` | Lightweight global state (scroll store) |
+| `lenis` | `^1.3.26` | Smooth scrolling |
+| `zustand` | `^5.0.15` | Lightweight global state (scroll store) |
 | `resize-observer-polyfill` | `^1.5.1` | ResizeObserver fallback for animation hooks |
 | `zod` | `^4.4.3` | Schema validation — env (`src/env.ts`) + API payloads. See [[api-architecture]] |
 
@@ -76,11 +76,43 @@ yarn lint     # eslint
 
 Package manager: **Yarn** (`yarn.lock` is committed).
 
-## Not yet in the stack
+## Runtime
 
-Auth, database/ORM, payments, i18n, data-fetching libraries. The original starter
-spec listed these as "add as needed" placeholders. Document them here when adopted,
-and add an ADR to [[decisions-log]].
+**Node ≥ 20.19.0**, declared in `package.json` `engines` and pinned for local dev
+by `.nvmrc` (24.16.0). Next 16 itself only needs ≥ 20.9, but the ESLint 9
+toolchain pulls `eslint-visitor-keys@5`, which requires
+`^20.19.0 || ^22.13.0 || >=24` — on Node 20.17 `yarn install` **fails outright**,
+which is why the floor is declared rather than left implicit.
+
+## Deliberately held back
+
+Three dependencies are **not** on latest, each for a verified reason (ADR-0022).
+Re-test these periodically rather than assuming they are still blocked:
+
+| Package | Held at | Latest | Why |
+|---------|---------|--------|-----|
+| `typescript` | `^5.9.3` | `7.0.2` | `eslint-config-next` depends on `typescript-eslint@8`, whose peer range is `typescript >=4.8.4 <6.1.0`. TS 7 (the native Go compiler, GA July 2026) would break linting. Revisit when typescript-eslint supports it. |
+| `eslint` | `^9.39.4` | `10.8.1` | **Tested and reverted.** ESLint 10 crashes `eslint-plugin-react` (`context.getFilename()` was removed): `TypeError: contextOrFilename.getFilename is not a function`. Three of Next's bundled plugins still declare `eslint ^9` peers. |
+| `@types/node` | `^24` | `26.2.0` | Tracks the Node major actually in use (24), not the newest published. |
+
+## Not in the starter — chosen, but added per project
+
+The starter stays dependency-light; these are the **decided** defaults, installed
+only when a project needs them (ADR-0020):
+
+| Need | Choice | Playbook |
+|------|--------|----------|
+| CMS | Payload (in-app, Next-native) | [[cms-payload]] · `/cms` |
+| Database | Supabase Postgres | [[database-supabase]] · `/db` |
+| File storage | Supabase Storage (S3-compatible) | [[cms-payload]] |
+| Auth | Supabase Auth (`@supabase/ssr`) — only with real user accounts | [[database-supabase]] |
+
+> [!note] Payload compatibility — satisfied as of 2026-08-18
+> `@payloadcms/next` 3.88 peer-requires `next >=16.2.6 <17`. The starter is on
+> `16.3.1`, so it now satisfies that range. Re-check when either side moves.
+
+Still undecided: payments, i18n, data-fetching libraries, testing. Document here
+when adopted and add an ADR to [[decisions-log]].
 
 ## Related
 

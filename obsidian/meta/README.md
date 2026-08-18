@@ -37,10 +37,25 @@ obsidian/
 ## Maintenance rules
 
 1. When a dependency changes → update [[tech-stack]] and add a [[changelog]] entry.
-2. When an architectural choice is made → add an ADR to [[decisions-log]].
+2. When an architectural choice is made → add an ADR to [[decisions-log]],
+   continuing the existing numbering.
 3. When a component/hook is added → document it and link it from the relevant catalog.
 4. Keep [[frontend/animation-system]] in sync with `src/components/animation/` —
    that code is the heart of the starter.
+
+## Inherited vs. project content
+
+Two notes behave differently from the rest when a project is started from this
+starter:
+
+- **[[decisions-log]]** ships **populated**. ADR-0001 … ADR-0022 explain why the
+  starter's conventions exist, and notes across the vault link to them by number
+  — so keep the numbers stable. Add your project's decisions on top. Amending an
+  inherited decision is fine: write a new ADR saying so rather than editing the old.
+- **[[changelog]]** ships **empty**, with a baseline entry describing what the
+  starter provides. It logs *this* project's history, not the starter's.
+
+Everything else is written to be edited in place as the project diverges.
 
 ## Source-of-truth note
 

@@ -1,4 +1,11 @@
 /**
+ * A bag of animatable values — the shape `from`/`to` take on every spring
+ * component. Values are plain numbers, or strings carrying a CSS unit or
+ * transform function (`"10px"`, `"45deg"`, `"translate(10px)"`).
+ */
+export type SpringValues = Record<string, string | number>;
+
+/**
  * @fileoverview Utility function to transform a value from one range to another
  * Takes a value and maps it from its original min/max range to a new min/max range
  * Clamps the input value to the original range before transforming
@@ -32,7 +39,7 @@ export const lerp = (start: number, end: number, t: number): number => {
  * Creates a debounced version of the provided function that delays execution
  * Useful for handling frequent events like resize or scroll
  */
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...args: never[]) => void>(
   func: T,
   delay: number,
 ): T => {
@@ -51,15 +58,15 @@ export const debounce = <T extends (...args: any[]) => void>(
  * Returns an object with interpolated values in their original format
  */
 export const interpolate = (
-  start: { [key: string]: any },
-  end: { [key: string]: any },
+  start: SpringValues,
+  end: SpringValues,
   progress: number,
-) => {
-  const result: { [key: string]: any } = {};
+): SpringValues => {
+  const result: SpringValues = {};
 
   // Helper to extract number from string with units
   const extractNumber = (
-    value: any,
+    value: unknown,
   ): { number: number; unit: string | null } => {
     if (typeof value === "number") return { number: value, unit: null };
     if (typeof value === "string") {

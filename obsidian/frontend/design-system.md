@@ -13,6 +13,12 @@ Styling uses **Tailwind CSS v4**, configured entirely in CSS. There is **no
 `src/app/globals.css` is the single config file. Extra CSS layers can be split
 into `src/style/index.css` and imported.
 
+The import is scoped: `@import "tailwindcss" source("../")` limits class
+detection to `src/`. Without it Tailwind v4 auto-scans the whole repo, so class
+*patterns* written in documentation — `duration-[var(--duration-*)]` in the vault
+and in `.claude/` — are parsed as real candidates and emit CSS build warnings.
+Documentation is not a source of utilities.
+
 ## Token naming convention
 
 > [!important] This convention is **strict and portable by design**
@@ -65,7 +71,7 @@ The indirection is load-bearing, not ceremony.
 ### Namespaces that generate utilities
 
 A token only becomes a utility if its prefix is a Tailwind namespace. Verified
-against `tailwindcss` v4.3.3:
+against `tailwindcss` v4.3.3 (the installed version):
 
 | Namespace | Generated utilities |
 |-----------|--------------------|

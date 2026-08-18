@@ -17,6 +17,10 @@ single source of truth for how this project is built.
 - The relevant topic note (e.g. `frontend/animation-system.md` before animation
   work, `workflows/new-page.md` before building a page)
 
+**Commands, skills and agents** live in `.claude/` and are mapped in
+`obsidian/workflows/agent-harness.md`. Common entry points: `/new-page`,
+`/section`, `/qa`, `/ship`, `/cms`, `/db`, `/seo`, `/migrate-site`.
+
 Notes link each other with `[[wikilinks]]` — follow them to navigate.
 
 ## Hard rules (never violate)
@@ -57,7 +61,14 @@ Notes link each other with `[[wikilinks]]` — follow them to navigate.
     a clean heading outline, named landmarks, real `button`/`a`, `alt` text,
     JSON-LD (not microdata), semantic `tag` on animation components. See
     `obsidian/frontend/html-semantics.md`.
-11. **3D performance → use the skill.** If the request is about performance,
+11. **Verify before reporting done.** `.claude/scripts/verify.sh` (zero FAILs) +
+    `yarn lint` + `yarn build` after any code change, and the `qa-verify` skill
+    after any UI change. See `obsidian/workflows/qa-verification.md`.
+12. **CMS & database are Payload + Supabase**, added per project — not shipped in
+    the starter. Use the `payload-cms` / `supabase-db` skills; see
+    `obsidian/backend/cms-payload.md`. Note `middleware.ts` does not exist in
+    Next 16 — it is `proxy.ts`.
+13. **3D performance → use the skill.** If the request is about performance,
     jank, or shipping readiness **and** the project renders a three.js / WebGL
     scene (`three` in `package.json`, or a canvas with a render loop), invoke the
     **`optimize-3d-scene`** skill first and follow its order of fixes — don't
@@ -67,4 +78,14 @@ Notes link each other with `[[wikilinks]]` — follow them to navigate.
 
 Update the vault: dependency changes → `tech-stack.md` + `changelog.md`;
 architectural choices → an ADR in `decisions-log.md`; new component/hook/util →
-the relevant catalog note.
+the relevant catalog note. The `vault-librarian` agent can do this pass for you.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

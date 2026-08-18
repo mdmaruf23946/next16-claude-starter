@@ -5,9 +5,10 @@ updated: 2026-05-22
 
 # Backend
 
-`next16-claude-starter` is frontend-first, but it now has a server **API
-layer**: Next.js Route Handlers under `src/app/api/`. There is still no
-database or authentication.
+`next16-claude-starter` is frontend-first, with a server **API layer**: Next.js
+Route Handlers under `src/app/api/`. The starter itself ships **no database, CMS
+or auth** — those are added per project, and the conventions for doing so are
+documented here so every project built from this starter does it the same way.
 
 ## What exists
 
@@ -17,26 +18,33 @@ database or authentication.
 - **Shared API helpers** — `src/lib/api/` (`handle`, `ApiError`) and the
   client-side `src/lib/api-client.ts`.
 
-## What does not exist yet
+## Not in the starter — added per project
 
-- Database & ORM
-- Authentication
-- Server Actions (the project default for mutations is still TBD — currently
-  everything goes through `app/api`)
+| Need | Choice | Note | Added by |
+|------|--------|------|----------|
+| CMS | **Payload**, inside this Next app | [[cms-payload]] | `/cms` |
+| Database | **Supabase** Postgres | [[database-supabase]] | `/db` |
+| File storage | **Supabase Storage** (S3-compatible) | [[cms-payload]] | `/cms` |
+| Auth | **Supabase Auth** — only if real user accounts are needed | [[database-supabase]] | `supabase-auth` skill |
 
-## When more backend is added
+They stay out of the starter deliberately: most projects built from it are
+marketing sites that never need a database, and an unused Payload install is a
+large dependency surface plus a migration story to maintain. The decision is
+recorded as ADR-0020.
 
-- `database-schema.md` — tables, relations, migrations
-- `auth.md` — authentication flow & session handling
+Still open:
+
+- Server Actions — the default for mutations is still TBD; everything currently
+  goes through `app/api`.
 
 Also: add deps to [[tech-stack]], record an ADR in [[decisions-log]], update
 [[data-flow]], add a [[changelog]] entry.
 
 > [!tip] Deployment target
 > The repo targets **Vercel**. Route handlers run on Fluid Compute (Node.js) —
-> do not use the Edge runtime. Prefer Vercel-native options (Marketplace
-> databases like Neon Postgres, Clerk for auth).
+> do not use the Edge runtime (Next 16 removed it from `proxy.ts` regardless).
+> See [[ship]] for the launch gate.
 
 ## Related
 
-[[api-architecture]] · [[system-overview]] · [[tech-stack]] · [[environment-variables]]
+[[api-architecture]] · [[cms-payload]] · [[database-supabase]] · [[system-overview]] · [[tech-stack]] · [[environment-variables]] · [[ship]]

@@ -15,8 +15,15 @@ next16-claude-starter/
 ├── src/                     ← application code (see below)
 ├── public/                  ← static assets (see "public/" section below)
 ├── obsidian/                ← this Obsidian vault — ALL project documentation
-├── .claude/settings.json    ← Claude Code hooks — automate the vault workflow
+├── .claude/                 ← agent execution layer — see [[agent-harness]]
+│   ├── settings.json        ← hooks + permissions
+│   ├── scripts/verify.sh    ← mechanical hard-rule checks
+│   ├── rules/               ← path-scoped context (auto-loads per file read)
+│   ├── skills/              ← procedures loaded on demand
+│   ├── agents/              ← subagent definitions
+│   └── commands/            ← slash commands
 ├── app config files         ← next.config.ts, tsconfig, eslint, postcss
+├── .nvmrc                   ← pinned Node for local dev (see [[tech-stack]] → Runtime)
 ├── README.md                ← project README → points into the vault
 ├── AGENTS.md                ← agent guide — breaking-change warning, hard rules, vault pointer
 ├── CLAUDE.md                ← Claude Code entry → @AGENTS.md
@@ -25,8 +32,9 @@ next16-claude-starter/
 
 All documentation lives in the vault. The root `AGENTS.md` / `CLAUDE.md` /
 `.cursorrules` are thin shims that carry the hard rules and point into it —
-see [[ai-agent-guide]]. `.claude/settings.json` holds hooks that enforce the
-documentation workflow automatically — also see [[ai-agent-guide]].
+see [[ai-agent-guide]]. `.claude/` holds the execution layer: hooks and
+permissions in `settings.json`, plus the commands, rules, skills, agents and the
+`verify.sh` check script — see [[agent-harness]].
 
 ## `src/` — application code
 
@@ -123,4 +131,4 @@ Treat them as a vendored library — consume them, never edit them. See [[animat
 
 ## Related
 
-[[system-overview]] · [[component-conventions]] · [[routing]]
+[[system-overview]] · [[component-conventions]] · [[routing]] · [[agent-harness]]

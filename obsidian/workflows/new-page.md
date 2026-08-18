@@ -16,8 +16,9 @@ and hand it to an AI agent or follow it manually.
 
 ## Steps
 
-1. **Get the design.** Collect the desktop + mobile Figma frames. Use the Figma
-   MCP server to read exact measurements, colours, typography, spacing.
+1. **Get the design.** Collect the desktop + mobile Figma frames and follow
+   [[figma-to-code]] — fetch both `get_design_context` and `get_screenshot`,
+   record node IDs, download and verify assets. Never build from a description.
 2. **Plan the route.** Add `app/<route>/page.tsx` (thin, delegates) — see [[routing]].
 3. **Build the view.** Create `src/views/<page-name>.tsx`. The route imports only
    from `views/`.
@@ -38,7 +39,10 @@ and hand it to an AI agent or follow it manually.
 10. **Semantic & accessible markup.** Follow [[html-semantics]] — one `<h1>`,
     proper landmarks, native elements, named controls, visible focus, `alt` text,
     semantic `tag` on animation components.
-11. **Quality.** `yarn lint`, components < ~150 lines, conventional commit.
+11. **Route registered.** Add the route to `src/app/sitemap.ts` in the same
+    change — the most common drift in this repo. See [[seo-aeo]].
+12. **Verify.** `.claude/scripts/verify.sh`, `yarn lint`, `yarn build`, then the
+    judgement pass in [[qa-verification]]. Components < ~150 lines, conventional commit.
 
 ## Deliverables
 
@@ -66,4 +70,4 @@ and hand it to an AI agent or follow it manually.
 
 ## Related
 
-[[routing]] · [[component-conventions]] · [[design-system]] · [[animation-system]]
+[[routing]] · [[component-conventions]] · [[design-system]] · [[animation-system]] · [[figma-to-code]] · [[qa-verification]] · [[ship]]
